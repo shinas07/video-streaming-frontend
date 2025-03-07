@@ -74,7 +74,7 @@ function Home() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              {/* <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   to="/register"
                   className="group relative inline-flex items-center justify-center px-8 py-4 
@@ -87,7 +87,7 @@ function Home() {
                     <ArrowRightIcon className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Link>
-              </motion.div>
+              </motion.div> */}
 
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
