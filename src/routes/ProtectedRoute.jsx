@@ -1,15 +1,13 @@
+import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return <div>Loading...</div>; // Or your loading component
-  }
+    const user = localStorage.getItem('user');
 
   if (!user) {
-    return <Navigate to="/login" />;
+    toast.info('Place sign in to continue.')
+    return <Navigate to="/signin" />;
   }
 
   return children;
