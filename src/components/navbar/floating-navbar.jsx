@@ -28,7 +28,7 @@ const defaultNavItems = [
   },
   {
     name: "Upload",
-    path: "video/upload/",
+    path: "/video/upload/",
     icon: <VideoCameraIcon className="w-4 h-4" />,
   },
 ];
