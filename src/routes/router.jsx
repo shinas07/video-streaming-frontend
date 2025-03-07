@@ -6,7 +6,11 @@ import Home from '../pages/Home';
 import Register from '../components/auth/Register';
 // videos 
 import VideoUpload from '../pages/VideoUpload';
-
+import VideoPlayer from '../pages/VideoPlayer';
+import VideoList from '../pages/VideoList';
+import VideoEdit from '../pages/VideoEdit';
+import NotFound from '../pages/NotFound';
+import ProtectedRoute from './ProtectedRoute';
 // Simple Protected Route Component
 const AuthRoute = ({ children }) => {
   const user = localStorage.getItem('user');
@@ -18,11 +22,11 @@ const AuthRoute = ({ children }) => {
 
 const router = createBrowserRouter([
     {
-        path:'/',
+        path:"/",
         element:<Home/>
     },
     {
-        path:'/signin',
+        path:"/signin",
         element: (
             <AuthRoute>
                 <LoginForm />
@@ -30,7 +34,7 @@ const router = createBrowserRouter([
         ),
     },
     {
-        path:'/signup',
+        path:"/signup",
         element: (
             <AuthRoute>
                 <Register />
@@ -38,9 +42,37 @@ const router = createBrowserRouter([
         ),
     },
     {
-        path:'video/upload/',
-        element:<VideoUpload/>
+        path:"/video/upload/",
+        element:
+        <ProtectedRoute>
+        <VideoUpload/>
+        </ProtectedRoute>
     },
+    {
+        path:"/videos/",
+        element:
+        <ProtectedRoute>
+        <VideoList/>,
+        </ProtectedRoute>
+    },
+    {
+        path:"/watch-video/:videoId",
+        element:
+        <ProtectedRoute>
+        <VideoPlayer/>
+        </ProtectedRoute>
+    },
+    {
+        path:'/edit-video/:videoId',
+        element:
+        <ProtectedRoute>
+        <VideoEdit/>,
+        </ProtectedRoute>
+    },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
 ])
 
 export default router
