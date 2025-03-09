@@ -22,7 +22,7 @@ const VideoPlayer = () => {
         setError(null);
 
         if (imgRef.current && isPlaying) {
-          imgRef.current.src = `${api.defaults.baseURL}api/videos/${videoId}/stream/`;
+          imgRef.current.src = `${api.defaults.baseURL}/api/videos/${videoId}/stream/`;
           imgRef.current.onload = () => {
             if (mounted) setIsLoading(false);
           };
@@ -51,7 +51,7 @@ const VideoPlayer = () => {
       const encryptedAccess = localStorage.getItem('access_token')
       const token = decryptToken(encryptedAccess)
       // Stop the stream when component unmounts or when navigating away
-      fetch(`${api.defaults.baseURL}api/videos/${videoId}/stop-stream/`, {
+      fetch(`${api.defaults.baseURL}/api/videos/${videoId}/stop-stream/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -64,7 +64,7 @@ const VideoPlayer = () => {
     const encryptedAccess = localStorage.getItem('access_token');
     const token = decryptToken(encryptedAccess);
     // Stop stream before navigating back
-    fetch(`${api.defaults.baseURL}api/videos/${videoId}/stop-stream/`, {
+    fetch(`${api.defaults.baseURL}/api/videos/${videoId}/stop-stream/`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token})}`,
@@ -96,7 +96,7 @@ const VideoPlayer = () => {
   
       // Update the video source after starting the stream
       if (imgRef.current) {
-        imgRef.current.src = `${api.defaults.baseURL}api/videos/${videoId}/stream/?t=${new Date().getTime()}`;
+        imgRef.current.src = `${api.defaults.baseURL}/api/videos/${videoId}/stream/?t=${new Date().getTime()}`;
       }
     }
   
