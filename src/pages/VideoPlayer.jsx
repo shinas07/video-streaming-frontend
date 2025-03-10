@@ -79,7 +79,7 @@ const VideoPlayer = () => {
   
     if (isPlaying) {
       // Stop the stream
-      await fetch(`${api.defaults.baseURL}api/videos/${videoId}/stop-stream/`, {
+      await fetch(`${api.defaults.baseURL}/api/videos/${videoId}/stop-stream/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -87,7 +87,7 @@ const VideoPlayer = () => {
       }).catch(console.error);
     } else {
       // Restart the stream properly
-      await fetch(`${api.defaults.baseURL}api/videos/${videoId}/start-stream/`, {
+      await fetch(`${api.defaults.baseURL}/api/videos/${videoId}/start-stream/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
