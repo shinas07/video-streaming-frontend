@@ -9,32 +9,51 @@ import FloatingNav from '../components/navbar/floating-navbar';
 const VideoList = () => {
   const navigate = useNavigate();
   const [videos, setVideos] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [videosPerPage] = useState(6); // Show 6 videos per page
+  const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('newest');
 
-  useEffect(() => {
-    fetchVideos();
-  }, [sortBy]);
-
   const fetchVideos = async (query = '') => {
     try {
       setIsLoading(true);
-      const response = await api.get(`api/videos/${query ? `?search=${query}&sort=${sortBy}` : `?sort=${sortBy}`}`);
-      setVideos(response.data);
-      console.log(response.data)
+      const response = await api.get(
+        `api/videos/${query ? `?search=${query}&sort=${sortBy}` : `?sort=${sortBy}`}`
+      );
+      
+      // Calculate total pages based on the total videos
+      const allVideos = response.data || [];
+      const calculatedTotalPages = Math.ceil(allVideos.length / videosPerPage);
+      setTotalPages(calculatedTotalPages);
+
+      // Implement client-side pagination
+      const startIndex = (currentPage - 1) * videosPerPage;
+      const endIndex = startIndex + videosPerPage;
+      const paginatedVideos = allVideos.slice(startIndex, endIndex);
+      
+      setVideos(paginatedVideos);
     } catch (error) {
       setError('Failed to load videos');
       console.error('Error fetching videos:', error);
+      setVideos([]);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Update useEffect to refetch when page changes
+  useEffect(() => {
+    fetchVideos(searchQuery);
+  }, [sortBy, currentPage]); // Include currentPage as dependency
+
+  // Reset to first page when searching
   const handleSearch = (e) => {
     e.preventDefault();
+    setCurrentPage(1); // Reset to first page
     fetchVideos(searchQuery);
   };
 
@@ -95,6 +114,31 @@ const VideoList = () => {
         </div>
       </div>
     </motion.div>
+  );
+
+  // Add PaginationControls component
+  const PaginationControls = () => (
+    <div className="flex justify-center items-center space-x-4 mt-8">
+      <button
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 
+                 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        Previous
+      </button>
+      <span className="text-gray-400">
+        Page {currentPage} of {totalPages}
+      </span>
+      <button
+        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 
+                 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        Next
+      </button>
+    </div>
   );
 
   return (
@@ -168,13 +212,16 @@ const VideoList = () => {
         ) : error ? (
           <div className="text-center text-red-500 py-8">{error}</div>
         ) : (
-          <AnimatePresence>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {videos.map((video) => (
-                <VideoCard key={video.id} video={video} />
-              ))}
-            </div>
-          </AnimatePresence>
+          <>
+            <AnimatePresence>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {videos.map((video) => (
+                  <VideoCard key={video.id} video={video} />
+                ))}
+              </div>
+            </AnimatePresence>
+            {videos.length > 0 && <PaginationControls />}
+          </>
         )}
 
         {/* No Results */}
